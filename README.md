@@ -4,11 +4,11 @@ The Nature Conservancy Fisheries Monitoring
 The challenge is [The Nature Conservancy Fisheries Monitoring](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/data) on kaggle
 Final project which contains four parts:
 
-1. Download the released annotation file of Nature Conservancy Fisheries Monitoring dataset for the bounding box of objects in the train images
+1. Download the released [annotation json file](https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8) of NCFM dataset 
 2. The classes in the provided data are 'ALB', 'BET', 'DOL', 'LAG', 'OTHER', 'SHARK','YFT'. We removed the 'OTHER' class in order to train the model with more precision.
 3. Classify the digits of bounding boxes into 6 classes (0-5)
 
-The giving Nature Conservancy Fisheries Monitoring dataset contains 3013 images for training, 1000 images in test_stg1, 12153 images in test_stg2. This project uses the YOLOv5 pre-trained model to fix this challenge.
+The giving NCFM dataset contains 3013 images for training, 1000 images in test_stg1, 12153 images in test_stg2. This project uses the YOLOv5 pre-trained model to fix this challenge.
 
 ### File descriptions
 train.zip - zipped folder of all train images. The train folders are organized by fish species labels.
@@ -48,47 +48,57 @@ pip install -r requirements.txt
 ```
 
 ### Data Preparation
-Download the given dataset from [The Nature Conservancy Fisheries Monitoring](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/data).
+Download the given dataset from [NCFM](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/data).
+Download the given annotation file from [Annotation](https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8).
+
+The files is reorganized as below:
+```
+ ├── yolo-master
+ │     └── data
+ ├── label
+ │     ├──  ALB.json
+ │     ├──  BET.json
+ │     ├──  .
+ │     ├──  .
+ │     ├──  .
+ │     └──  YFT.json
+ │   
+ ├── make2txt.py
+ ├── yolo2coco.py
+ └── coco-to-yolo-by-category.py
+```
 
 The files in the data folder is reorganized as below:
 ```
-./data
+./yolo-master/data
  ├── images
- │     ├── img_00001.png
- │     │   ...
- │     └── img_03013.png
- │ 
+ │     └── img_00001.png
  ├── test
  │     ├──  test_stg1
  │     │      ├── img_00001.png
  │     │      │   ...
  │     │      └── img_01000.png
- │     │
  │     └──  test_stg2
  │            ├── img_00001.png
  │            │   ...
  │            └── img_12153.png
- │   
- ├── mat_to_yolo.py
- ├── train_val_test.py
  └── coco.yaml
 ```
 
 
-And run command `python train_val_test.py` to create train.txt, val.txt, test.txt for training and reorganize the  data structure as below:
+
+And run command `python make2txt.py` to create train.txt, val.txt, test.txt for training and reorganize the data structure as below:
 ```
-./data
+./yolo-master/data
  ├── images
  │     ├── img_00001.png
  │     │   ...
  │     └── img_03013.png
- │
  ├── test
  │     ├──  test_stg1
  │     │      ├── img_00001.png
  │     │      │   ...
  │     │      └── img_01000.png
- │     │
  │     └──  test_stg2
  │            ├── img_00001.png
  │            │   ...
@@ -100,14 +110,15 @@ And run command `python train_val_test.py` to create train.txt, val.txt, test.tx
  ├── train.txt
  ├── test.txt
  ├── val.txt
- ├── mat_to_yolo.py
- ├── train_val_test.py
  └── coco.yaml
 ```
 
 
-And run command `python mat_to_yolo.py` to transform the .json format into yolo format in a .txt file. The transform formula for bounding boxes is: 
-
+And run command as below to transform each .json format into yolo format in a .txt file. 
+```
+python coco-to-yolo-by-category.py --json_path label/YFT.json --save_path labels/YFT 
+```
+The transform formula for bounding boxes is: 
 ```
 x = (xmin + (xmax - xmin)/2) * 1/image_w
 y = (ymin + (ymax - ymin)/2) * 1/image_h
@@ -157,8 +168,8 @@ python detect.py --source data/test/test_stg1 --weights runs/train/exp/weights/b
 python detect.py --source data/test/test_stg2 --weights runs/train/exp/weights/best.pt
 ```
 
-- Make Submission: create new_submission.csv combining test_stg1 and test_stg2 results. 
-  '\n'Open yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
+- Make Submission: create new_submission.csv combining test_stg1 and test_stg2 results. \
+  Open yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
 ```
 test1_root_path = 'yolov5-master/runs/detect/exp/labels'
 test2_root_path = 'yolov5-master/runs/detect/exp20/labels'
