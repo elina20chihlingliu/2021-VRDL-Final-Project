@@ -158,7 +158,7 @@ python detect.py --source data/test/test_stg2 --weights runs/train/exp/weights/b
 ```
 
 - Make Submission: create new_submission.csv combining test_stg1 and test_stg2 results. 
-  Open yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
+  \nOpen yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
 ```
 test1_root_path = 'yolov5-master/runs/detect/exp/labels'
 test2_root_path = 'yolov5-master/runs/detect/exp20/labels'
@@ -172,20 +172,13 @@ python yolo2coco.py
 ### Reference
 #### Related Work
 - [Deep Learning for Practical Image Recognition](https://www.researchgate.net/publication/326503174_Deep_Learning_for_Practical_Image_Recognition_Case_Study_on_Kaggle_Competitions)
-- [The Nature Conservancy Fisheries Monitoring Competition, 1st Place Winner’s Interview]
-(https://medium.com/kaggle-blog/the-nature-conservancy-fisheries-monitoring-competition-1st-place-winners-interview-team-79aefc688fb)
-[CNN models with advantages and disadvantages]
-(https://tejasmohanayyar.medium.com/a-practical-experiment-for-comparing-lenet-alexnet-vgg-and-resnet-models-with-their-advantages-d932fb7c7d17)
+- [The Nature Conservancy Fisheries Monitoring Competition, 1st Place Winner’s Interview](https://medium.com/kaggle-blog/the-nature-conservancy-fisheries-monitoring-competition-1st-place-winners-interview-team-79aefc688fb)
+- [CNN models with advantages and disadvantages](https://tejasmohanayyar.medium.com/a-practical-experiment-for-comparing-lenet-alexnet-vgg-and-resnet-models-with-their-advantages-d932fb7c7d17)
 
 #### Proposed Approach
-- [YOLOv5 annotation dataset]
-(https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8)
-- [YOLOv5 Model Architecture]
-(https://www.researchgate.net/figure/The-network-architecture-of-Yolov5-It-consists-of-three-parts-1-Backbone-CSPDarknet_fig1_349299852)
-- [YOLOv5 Loss Function]
-(https://bbs.cvmart.net/articles/3686)
-- [YOLOv5 data clipping]
-(https://www.kaggle.com/sbrugman/tricks-for-the-kaggle-leaderboard)
-- [CNN Model Architecture]
-(https://www.kaggle.com/zfturbo/fishy-keras-lb-1-25267/script)
+- [YOLOv5 annotation dataset](https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8)
+- [YOLOv5 Model Architecture](https://www.researchgate.net/figure/The-network-architecture-of-Yolov5-It-consists-of-three-parts-1-Backbone-CSPDarknet_fig1_349299852)
+- [YOLOv5 Loss Function](https://bbs.cvmart.net/articles/3686)
+- [YOLOv5 data clipping](https://www.kaggle.com/sbrugman/tricks-for-the-kaggle-leaderboard)
+- [CNN Model Architecture](https://www.kaggle.com/zfturbo/fishy-keras-lb-1-25267/script)
 
