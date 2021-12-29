@@ -158,7 +158,7 @@ python detect.py --source data/test/test_stg2 --weights runs/train/exp/weights/b
 ```
 
 - Make Submission: create new_submission.csv combining test_stg1 and test_stg2 results. 
-  \nOpen yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
+  '\n'Open yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
 ```
 test1_root_path = 'yolov5-master/runs/detect/exp/labels'
 test2_root_path = 'yolov5-master/runs/detect/exp20/labels'
