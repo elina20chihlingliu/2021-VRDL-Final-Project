@@ -2,11 +2,20 @@
 The Nature Conservancy Fisheries Monitoring
 以下要修正
 
-The proposed challenge is a street view house numbers detection, which contains two parts:
-1. Do bounding box regression to find top, left, width and height of bounding boxes which contain digits in a given image
-2. classify the digits of bounding boxes into 10 classes (0-9)
+The proposed challenge is [The Nature Conservancy Fisheries Monitoring](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/data) on kaggle, which contains two parts:
 
-The giving SVHN dataset contains 33402 images for training and 13068 images for testing. This project uses the YOLOv5 pre-trained model to fix this challenge.
+1. Download the released annotation file of Nature Conservancy Fisheries Monitoring dataset and bounding box regression to find top, left, width and height of bounding boxes which contain digits in a given image
+2. The classes in the provided data are 'ALB', 'BET', 'DOL', 'LAG', 'OTHER', 'SHARK','YFT'. We removed the 'OTHER' class in order to train the model with more precision.
+3. Classify the digits of bounding boxes into 6 classes (0-5)
+
+The giving Nature Conservancy Fisheries Monitoring dataset contains 3013 images for training, 1000 images in test_stg1, 12153 images in test_stg2. This project uses the YOLOv5 pre-trained model to fix this challenge.
+
+File descriptions
+train.zip - zipped folder of all train images. The train folders are organized by fish species labels.
+test_stg1.zip - zipped folder of all test images in stage 1
+test_stg2.zip - zipped folder of all test images in stage 2 (not available until the second stage of the competition)
+sample_submission_stg1.csv - a sample submission file in the correct format
+
 
 ### Environment
 - Microsoft win10
@@ -17,10 +26,6 @@ The giving SVHN dataset contains 33402 images for training and 13068 images for 
 ### YOLOv5
 The project is implemented based on yolov5.
 - [YOLOv5](https://github.com/ultralytics/yolov5)
-
-## Reproducing Submission
-To reproduct my submission without retrainig, run inference.ipynb on my Google Drive:
-- [inference.ipynb](https://drive.google.com/file/d/14IUxba_Tjaw3teusvljHuXGmZ8rEvH1a/view?usp=sharing)
 
 ## All steps including data preparation, train phase and detect phase
 1. [Installation](#install-packages)
@@ -43,31 +48,52 @@ pip install -r requirements.txt
 ```
 
 ### Data Preparation
-Download the given dataset from [Google Drive](https://drive.google.com/drive/folders/1aRWnNvirWHXXXpPPfcWlHQuzGJdXagoc) or [SVHN Dataset](http://ufldl.stanford.edu/housenumbers/).
+Download the given dataset from [The Nature Conservancy Fisheries Monitoring](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/data).
 
 The files in the data folder is reorganized as below:
 ```
 ./data
- ├── train
- │     ├──  xxx.png
- │     └──  digitStruct.mat
+ ├── images
+ │     ├── img_00001.png
+ │     │   ...
+ │     └── img_03013.png
+ │ 
  ├── test
- │     └──  yyy.png
+ │     ├──  test_stg1
+ │     │      ├── img_00001.png
+ │     │      │   ...
+ │     │      └── img_01000.png
+ │     │
+ │     └──  test_stg2
+ │            ├── img_00001.png
+ │            │   ...
+ │            └── img_12153.png
+ │   
  ├── mat_to_yolo.py
  ├── train_val_test.py
- └── shvn.yaml
+ └── coco.yaml
 ```
 
 
 And run command `python train_val_test.py` to create train.txt, val.txt, test.txt for training and reorganize the  data structure as below:
 ```
 ./data
- ├── train
- │     ├──  xxx.png
- │     └──  digitStruct.mat
+ ├── images
+ │     ├── img_00001.png
+ │     │   ...
+ │     └── img_03013.png
+ │
  ├── test
- │     └──  yyy.png
- ├── dataset
+ │     ├──  test_stg1
+ │     │      ├── img_00001.png
+ │     │      │   ...
+ │     │      └── img_01000.png
+ │     │
+ │     └──  test_stg2
+ │            ├── img_00001.png
+ │            │   ...
+ │            └── img_12153.png
+ ├── ImageSets
  │     ├──  train.txt
  │     ├──  test.txt
  │     └──  val.txt
@@ -76,36 +102,42 @@ And run command `python train_val_test.py` to create train.txt, val.txt, test.tx
  ├── val.txt
  ├── mat_to_yolo.py
  ├── train_val_test.py
- └── shvn.yaml
+ └── coco.yaml
 ```
 
 
-And run command `python mat_to_yolo.py` to create labels for yolo and reorganize the train data structure as below:
+And run command `python mat_to_yolo.py` to transform the .json format into yolo format in a .txt file. The transform formula for bounding boxes is: 
+
 ```
-- train/
-├── 1.png
-├── 1.txt
-├── 2.png
-├── 2.txt
+x = (xmin + (xmax - xmin)/2) * 1/image_w
+y = (ymin + (ymax - ymin)/2) * 1/image_h
+w = (xmax - xmin) * 1/image_w
+h = (ymax - ymin) * 1/image_h
+```
+
+Reorganize the train data labels structure as below:
+```
+- data/labels/
+├── img_00001.txt
+├── img_00002.txt
 │     .
 │     .
 │     .
-├── 33402.png
-└── 33402.txt
+└── img_03013.txt
 ```
 ### Set Configuration
-- create `svhn.yaml` in `./data`
+- change `coco.yaml` in `./data`
 ```
-# train, val and test data: # Total 33402 images
-train: data/train.txt  # 27055 images
-val: data/val.txt  # 3007 images
-test: data/test.txt  # 3340 images
+# train, val and test data: 
+train: train.txt  
+val: val.txt  
+test: test.txt  
 
 # number of classes
-nc: 10
+nc: 6  
 
 # class names
-names: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+names: ['ALB','BET','DOL','LAG','SHARK','YFT'] 
 ```
 
 ### Download Pretrained Model
@@ -114,41 +146,46 @@ names: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 ### Training
 - train model with pretrained model
 ```
-python train.py --epochs 20 --weights yolov5m.pt
+python train.py --epochs 10 --weights yolov5m.pt
 ```
 ### Testing
 - detect test data
 ```
-python detect.py --source data/test/ --weights runs/train/exp/weights/best.pt
+python detect.py --source data/test/test_stg1 --weights runs/train/exp/weights/best.pt
+```
+```
+python detect.py --source data/test/test_stg2 --weights runs/train/exp/weights/best.pt
 ```
 
-- Make Submission: creat answer.json following coco dataset format
+- Make Submission: create new_submission.csv combining test_stg1 and test_stg2 results
+- Open yolo2coco.py, and change the test1_root_path and test2_root_path to the labels path
 ```
-python output.py
+test1_root_path = 'yolov5-master/runs/detect/exp/labels'
+test2_root_path = 'yolov5-master/runs/detect/exp20/labels'
 ```
+- Transform the yolo format into coco format and combine test_stg1 & test_stg2 results:
 ```
-[{
-  "image_id": image_name,
-  "score": confidence,
-  "category_id": predict_label,
-  "bbox": [[left, top, width, height]],
- }, 
- {
-        "image_id": 100000,
-        "score": 0.5012,
-        "category_id": 6,
-        "bbox": [
-            60.99991,
-            14.000025,
-            39.00004,
-            52.999981999999996
-        ]
- }
-]
+python yolo2coco.py
 ```
+
 
 ### Reference
-- [h5py - Quick Start Guide](https://docs.h5py.org/en/stable/quick.html)
-- [YOLOv5](https://github.com/ultralytics/yolov5)
-- [YOLOv5 實現目標檢測](https://tw511.com/a/01/29504.html)
-- [2020_HW2](https://github.com/chia56028/Street-View-House-Numbers-Detection/blob/main/README.md)
+#### Related Work
+- [Deep Learning for Practical Image Recognition](https://www.researchgate.net/publication/326503174_Deep_Learning_for_Practical_Image_Recognition_Case_Study_on_Kaggle_Competitions)
+- [The Nature Conservancy Fisheries Monitoring Competition, 1st Place Winner’s Interview]
+(https://medium.com/kaggle-blog/the-nature-conservancy-fisheries-monitoring-competition-1st-place-winners-interview-team-79aefc688fb)
+[CNN models with advantages and disadvantages]
+(https://tejasmohanayyar.medium.com/a-practical-experiment-for-comparing-lenet-alexnet-vgg-and-resnet-models-with-their-advantages-d932fb7c7d17)
+
+#### Proposed Approach
+[YOLOv5 annotation dataset]
+(https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8)
+[YOLOv5 Model Architecture]
+(https://www.researchgate.net/figure/The-network-architecture-of-Yolov5-It-consists-of-three-parts-1-Backbone-CSPDarknet_fig1_349299852)
+[YOLOv5 Loss Function]
+(https://bbs.cvmart.net/articles/3686)
+[YOLOv5 data clipping]
+(https://www.kaggle.com/sbrugman/tricks-for-the-kaggle-leaderboard)
+[CNN Model Architecture]
+(https://www.kaggle.com/zfturbo/fishy-keras-lb-1-25267/script)
+
