@@ -11,10 +11,10 @@ Final project which contains four parts:
 The giving NCFM dataset contains 3013 images for training, 1000 images in test_stg1, 12153 images in test_stg2. This project uses the YOLOv5 pre-trained model to fix this challenge.
 
 ### File descriptions
-train.zip - zipped folder of all train images. The train folders are organized by fish species labels.
-test_stg1.zip - zipped folder of all test images in stage 1
-test_stg2.zip - zipped folder of all test images in stage 2 (not available until the second stage of the competition)
-sample_submission_stg1.csv - a sample submission file in the correct format
+train.zip - zipped folder of all train images. The train folders are organized by fish species labels.\
+test_stg1.zip - zipped folder of all test images in stage 1\
+test_stg2.zip - zipped folder of all test images in stage 2 (not available until the second stage of the competition)\
+sample_submission_stg1.csv - a sample submission file in the correct format\
 
 
 ### Environment
