@@ -2,9 +2,9 @@
 The Nature Conservancy Fisheries Monitoring
 
 The challenge is [The Nature Conservancy Fisheries Monitoring](https://www.kaggle.com/c/the-nature-conservancy-fisheries-monitoring/data) on kaggle
-Final project which contains four parts:
+Final project which contains three parts:
 
-1. Download the released [annotation json file](https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8) of NCFM dataset 
+1. Download the released [annotation json file](https://github.com/autoliuweijie/Kaggle/tree/master/NCFM/datasets?fbclid=IwAR2UegoKzjlkndkndXkKKDqNeqi3e4EGUWy19jya6RRGpPzLoK8s5ZxI_W8) of NCFM dataset and generate the bounding boxes labels
 2. The classes in the provided data are 'ALB', 'BET', 'DOL', 'LAG', 'OTHER', 'SHARK','YFT'. We removed the 'OTHER' class in order to train the model with more precision.
 3. Classify the digits of bounding boxes into 6 classes (0-5)
 
